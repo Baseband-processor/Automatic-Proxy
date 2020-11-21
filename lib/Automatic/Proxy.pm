@@ -12,7 +12,7 @@ use LWP::UserAgent;
 # interface for hidemy.name
 
 use constant HIDEMYNAME => "https://hidemy.name/en/proxy-list/?";
-
+use constant ALL_COUNTRY => "AFALARAMAUATBDBYBEBZBJBOBWBRBGBFBIKHCMCACLCNCOCDCRHRCYCZDJDOECEGGQFIFRGEDEGHGRGTGNHTHNHKHUINIDIRIQIEITJPKZKEKRLALVLBLYLTMYMVMTMXMDMNMZMMNPNLNINGPKPSPAPYPEPHPLPRRORUSARSSGSKSISOZAESSECHSYTWTHTRUGUAAEGBUSUZVEVNVGZMZW";
 my $lwp = LWP::UserAgent->new();
 
 my %anonimity_levels = {
@@ -31,7 +31,8 @@ my %proxy_types = {
 
 my @ip_array;
 sub scrape_hidemy{
-  my( $port, $type, $anonimity ) = @_;
+  my( $port, $type, $anonimity, $all_country ) = @_;
+  my $final_url;
   if( $port > 65535 || undef( $port ) ){
     die "not inserted port variable or maximun port number is wrong!\n";
   }
@@ -42,9 +43,12 @@ sub scrape_hidemy{
   if( undef( $anonimity_levels{$anonimity} ) ){
     die "wrong anonimity level!\n";
   }
+  if( defined($all_country) && $all_country == 1 ){
+  $final_url  = "https://hidemy.name/en/proxy-list/?country=AFALARAMAUATBDBYBEBZBJBOBWBRBGBFBIKHCMCACLCNCOCDCRHRCYCZDJDOECEGGQFIFRGEDEGHGRGTGNHTHNHKHUINIDIRIQIEITJPKZKEKRLALVLBLYLTMYMVMTMXMDMNMZMMNPNLNINGPKPSPAPYPEPHPLPRRORUSARSSGSKSISOZAESSECHSYTWTHTRUGUAAEGBUSUZVEVNVGZMZW&ports=" . $port . "&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
+  }else{
+    $final_url  = "https://hidemy.name/en/proxy-list/?ports=" . $port . "&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
+  }
   
-  
-  my $final_url  = "https://hidemy.name/en/proxy-list/?ports=" . $port . "&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
   local $html = $lwp->get( $final_url );
   foreach( local $ip = $html =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ){
       $ip = $1;
