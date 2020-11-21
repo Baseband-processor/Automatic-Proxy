@@ -46,7 +46,7 @@ sub scrape_hidemy{
   
   my $final_url  = "https://hidemy.name/en/proxy-list/?ports=" . $port . "&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
   local $html = $lwp->get( $final_url );
-  foreach( my $ip = $html =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ){
+  foreach( local $ip = $html =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ){
       $ip = $1;
       push( $ip, @ip_array );
     }
