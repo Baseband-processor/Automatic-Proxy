@@ -13,6 +13,9 @@ use LWP::UserAgent;
 
 use constant HIDEMYNAME => "https://hidemy.name/en/proxy-list/?";
 use constant ALL_COUNTRY => "AFALARAMAUATBDBYBEBZBJBOBWBRBGBFBIKHCMCACLCNCOCDCRHRCYCZDJDOECEGGQFIFRGEDEGHGRGTGNHTHNHKHUINIDIRIQIEITJPKZKEKRLALVLBLYLTMYMVMTMXMDMNMZMMNPNLNINGPKPSPAPYPEPHPLPRRORUSARSSGSKSISOZAESSECHSYTWTHTRUGUAAEGBUSUZVEVNVGZMZW";
+
+use constant SPYSONE => "spys.one";
+
 my $lwp = LWP::UserAgent->new(
       protocols_allowed => ['http', 'https'],
 );
@@ -59,5 +62,14 @@ sub scrape_hidemy{
   return( \@ip_array );
 }
 
+
+sub scrape_spysone{
+      local $spysone = $lwp->get("https://spys.one/en/");
+      foreach( local $spyIP = $spysone =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ){
+            $spyIP = $1;
+            push($spyIP, @ip_array);
+      }
+    return( \@ip_array );
+}
 
 1;
