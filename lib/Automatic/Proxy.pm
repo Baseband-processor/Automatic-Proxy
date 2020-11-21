@@ -6,6 +6,7 @@ package Automatic::Proxy;
 use strict;
 no strict 'refs';
 use warnings;
+use List::MoreUtils qw(uniq);
 
 use LWP::UserAgent;
 
@@ -34,6 +35,7 @@ my %proxy_types = {
   'Socks5' => 5,
 };
 
+# set ms to 100 (maximun)
 my @ip_array;
 sub scrape_hidemy{
   my( $port, $type, $anonimity, $all_country ) = @_;
@@ -49,9 +51,9 @@ sub scrape_hidemy{
     die "wrong anonimity level!\n";
   }
   if( defined($all_country) && $all_country == 1 ){
-  $final_url  = "https://hidemy.name/en/proxy-list/?country=AFALARAMAUATBDBYBEBZBJBOBWBRBGBFBIKHCMCACLCNCOCDCRHRCYCZDJDOECEGGQFIFRGEDEGHGRGTGNHTHNHKHUINIDIRIQIEITJPKZKEKRLALVLBLYLTMYMVMTMXMDMNMZMMNPNLNINGPKPSPAPYPEPHPLPRRORUSARSSGSKSISOZAESSECHSYTWTHTRUGUAAEGBUSUZVEVNVGZMZW&ports=" . $port . "&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
+  $final_url  = "https://hidemy.name/en/proxy-list/?country=AFALARAMAUATBDBYBEBZBJBOBWBRBGBFBIKHCMCACLCNCOCDCRHRCYCZDJDOECEGGQFIFRGEDEGHGRGTGNHTHNHKHUINIDIRIQIEITJPKZKEKRLALVLBLYLTMYMVMTMXMDMNMZMMNPNLNINGPKPSPAPYPEPHPLPRRORUSARSSGSKSISOZAESSECHSYTWTHTRUGUAAEGBUSUZVEVNVGZMZW&ports=" . $port . "&maxtime=100&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
   }else{
-    $final_url  = "https://hidemy.name/en/proxy-list/?ports=" . $port . "&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
+    $final_url  = "https://hidemy.name/en/proxy-list/?ports=" . $port . "&maxtime=100&type=" . $proxy_types{$type} . "&anon=" .  $anonimity_levels{$anonimity} . "#list";
   }
   
   local $html = $lwp->get( $final_url );
@@ -70,6 +72,17 @@ sub scrape_spysone{
             push($spyIP, @ip_array);
       }
     return( \@ip_array );
+}
+
+# scrape best proxy with highest anonimity level and socks5 
+
+sub set_bestProxy {
+      my $port = @_;
+      my @candidates = uniq( @{ &scrape_hidemy( $port, "Socks5", "High", 1) } ); # remove duplicates
+      foreach( uniq( &scrape_spysone() ) ){
+            push ($_, @candidates);
+      }
+      return( @candidates );
 }
 
 1;
