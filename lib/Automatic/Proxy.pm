@@ -77,7 +77,7 @@ sub scrape_spysone{
 # scrape best proxy with highest anonimity level and socks5 
 
 sub set_bestProxy {
-      my $port = @_;
+      my ( $port, $timeout ) = @_; # $timeout refers to sProxy reflesh
       my @candidates = uniq( @{ &scrape_hidemy( $port, "Socks5", "High", 1) } ); # remove duplicates
       foreach( uniq( &scrape_spysone() ) ){
             push ($_, @candidates);
