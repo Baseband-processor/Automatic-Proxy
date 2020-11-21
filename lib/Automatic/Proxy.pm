@@ -1,7 +1,7 @@
+package Automatic::Proxy;
+
 # Made by Edoardo Mantovani, 2020
 # scrape automatic proxies
-
-package Automatic::Proxy;
 
 use strict;
 no strict 'refs';
