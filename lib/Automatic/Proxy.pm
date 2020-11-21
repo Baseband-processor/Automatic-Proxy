@@ -13,7 +13,9 @@ use LWP::UserAgent;
 
 use constant HIDEMYNAME => "https://hidemy.name/en/proxy-list/?";
 use constant ALL_COUNTRY => "AFALARAMAUATBDBYBEBZBJBOBWBRBGBFBIKHCMCACLCNCOCDCRHRCYCZDJDOECEGGQFIFRGEDEGHGRGTGNHTHNHKHUINIDIRIQIEITJPKZKEKRLALVLBLYLTMYMVMTMXMDMNMZMMNPNLNINGPKPSPAPYPEPHPLPRRORUSARSSGSKSISOZAESSECHSYTWTHTRUGUAAEGBUSUZVEVNVGZMZW";
-my $lwp = LWP::UserAgent->new();
+my $lwp = LWP::UserAgent->new(
+      protocols_allowed => ['http', 'https'],
+);
 
 my %anonimity_levels = {
   'High' => 4,
