@@ -37,6 +37,7 @@ my %proxy_types = {
 
 # set ms to 100 (maximun)
 my @ip_array;
+
 sub scrape_hidemy{
   my( $port, $type, $anonimity, $all_country ) = @_;
   my $final_url;
@@ -85,7 +86,10 @@ sub set_bestProxy {
       foreach( uniq( &scrape_spysone() ) ){
             push ($_, @candidates);
       }
-      $LWP_istance->proxy( ['http'], $candidates[0] );
+      foreach( @candidates ){
+            $LWP_istance->proxy( ['http'], $_ );
+            sleep(int( $timeout ) );
+      }
       return 1;
       }
 
